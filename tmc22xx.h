@@ -1,14 +1,14 @@
 // Class to drive the TMC22xx stepper driver chips, with very little tweaking
 // can also be used with most stepper drivers, minor changes needed for the
 // A4998 driver (or none if direction of travel is not important)
+// 
+// bare metal pico implementation
 //
 // Author James Wilson
 // 5th October 2021
 //
 
 #include <unistd.h>
-//#include <future>
-#include <atomic>
 #include <map>
 #include <string>
 
