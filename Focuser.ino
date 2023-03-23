@@ -1,4 +1,10 @@
-
+// Focuser controller for telescopes, emulates the moonlite focuser protocol
+// allowing use of the ascom drivers for the moonlite to be used on this.
+// Can be used with the TMC22xx or with the UL2003 if its needed (github.com/thrud61/ul2003)
+//
+// Author James Wilson
+// 1st November 2021
+//
 
 #include <FreeRTOS.h>
 #include <queue.h>
