@@ -1,5 +1,5 @@
 // Focuser controller for telescopes, emulates the moonlite focuser protocol
-// allowing use of the ascom drivers for the moonlite to be used on this.
+// allowing use of the ascom drivers for the moonlite, saving having to write COM+ drivers.
 // Can be used with the TMC22xx or with the UL2003 if its needed (github.com/thrud61/ul2003)
 //
 // Author James Wilson
@@ -92,10 +92,10 @@ void on_uart_rx()
     BaseType_t xTaskWoken; // needed for calling the queue send, we don't care
 
     // pick out the input command :ccxxxx#
-    // its a stete machine only 3 states but it counts
+    // its a state machine only 2 states but it counts
     switch (state)
     {
-      case 1: // looking for :, its stx
+      case 1: // looking for :, its our stx
         {
           // not : then get next char
           if (ch != ':')
@@ -108,7 +108,7 @@ void on_uart_rx()
         }
         break;
 
-      case 2: // looking for #, its etx, or [setting=x]
+      case 2: // looking for #, its our etx, or [setting=x] when we implement it
         {
           // we will keep everything thats not etx
           if (ch != '#')
@@ -165,9 +165,9 @@ void setup()
   gpio_set_function(UART_TX_PIN, GPIO_FUNC_UART);
   gpio_set_function(UART_RX_PIN, GPIO_FUNC_UART);
 
-  // Actually, we want a different speed
+  // Actually, we may want a different speed
   // The call will return the actual baud rate selected, which will be as close as
-  // possible to that requested
+  // possible to that requested, which we will ignore. But we got it right first time so....
   //  int __unused actual = uart_set_baudrate(UART_ID, BAUD_RATE);
 
   // Set UART flow control CTS/RTS, we don't want these, so turn them off
@@ -176,7 +176,7 @@ void setup()
   // Set our data format
   uart_set_format(UART_ID, DATA_BITS, STOP_BITS, PARITY);
 
-  // Turn off FIFO's - we want to do this character by character
+  // Turn on FIFO's - we want to do this character by character but we don't want to miss a char
   uart_set_fifo_enabled(UART_ID, true);
 
   // Set up a RX interrupt
